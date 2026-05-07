@@ -1,0 +1,27 @@
+\chapter{Conclusion and Future Scope}
+
+\section{Conclusion}
+
+AquaTrack demonstrates that wearable biomarker sensing can be combined with context-aware machine learning to produce a practical framework for real-time dehydration-risk classification. The project addresses the limitations of single-modality dehydration detection by integrating sweat and salivary biomarkers with environmental and activity context.
+
+The sodium alginate hydrogel prototype provided the most successful sensing matrix among the tested materials. It formed flexible patches, retained water effectively, entrapped urease, and produced a visible colorimetric response when exposed to urea-rich artificial sweat. The measured swelling ratio of approximately 122\% confirmed useful fluid absorption and mechanical stability.
+
+The computational pipeline successfully converted raw multimodal data into dehydration-risk predictions. The biomarker pipeline achieved strong three-class classification performance, while the context pipeline offered a corrective signal for environmental and activity-driven risk. Weighted fusion combined both outputs into a single dehydration score, making the system more interpretable and deployable for mobile health applications.
+
+\section{Future Scope}
+
+Future work can expand the dataset across a larger and more diverse population to improve generalization. Clinical ground-truth labels should be collected to validate the derived dehydration-risk classes. Longitudinal hydration tracking can also be added so that the model learns user-specific baselines and detects deviations over time.
+
+The hydrogel patch can be improved by standardizing thickness, drying time, enzyme loading, and imaging conditions. Additional metabolic markers such as lactate, glucose, and sodium can be incorporated to broaden clinical utility. The mobile application can also be extended with personalized recommendations, alert thresholds, and integration with wearable-device APIs.
+
+\section{Learning Outcomes of the Project}
+
+\begin{itemize}
+\item Understood the role of hydrogels as flexible and biocompatible matrices for wearable biosensing.
+\item Learned sodium alginate and PVA hydrogel synthesis methods and compared their practical outcomes.
+\item Studied urease-based colorimetric detection for urea-rich artificial sweat.
+\item Developed a preprocessing workflow involving imputation, winsorization, logarithmic transformation, and robust scaling.
+\item Designed domain-informed composite features for dehydration prediction.
+\item Compared multiple machine learning classifiers using cross-validation and F1 score.
+\item Understood how biomarker and context pipelines can be fused for interpretable mobile health monitoring.
+\end{itemize}

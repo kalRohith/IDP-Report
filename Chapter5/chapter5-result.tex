@@ -1,0 +1,87 @@
+\chapter{Results \& Discussions}
+
+The results of AquaTrack are evaluated through two lenses: the physical performance of the hydrogel prototype and the predictive performance of the machine learning pipelines. The hydrogel results establish whether the sensing matrix can collect fluid and respond to urea, while the classifier results show whether the processed multimodal data can support dehydration-risk prediction.
+
+\section{Hydrogel Prototype Results}
+
+The best-performing patch was produced using 2\% sodium alginate hydrogel, 5 drops of phenol red, 2 ml of urease, and 2\% calcium chloride for cross-linking. This formulation produced a flexible patch with good elastic strength and a high swelling response. The patch also detected elevated urea concentration by converting urea into ammonia, shifting the local pH, and causing a visible color change through phenol red.
+
+PVA hydrogel trials were not successful because the hydrogel did not cross-link adequately despite multiple freeze-thaw cycles. Possible reasons include insufficient PVA concentration, temperature variation during freezing and thawing, and weak crystallite formation. Since sodium alginate produced more reliable patches, it was selected for the final prototype.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.62\textwidth]{Figures/aquatrack/image2}
+\caption{Prototype of the functional sodium alginate sweat patch}
+\label{fig:functional-patch}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.72\textwidth]{Figures/aquatrack/image3}
+\caption{Functional sweat patches produced during sodium alginate trials}
+\label{fig:functional-patches}
+\end{figure}
+
+\section{Swelling Ratio Analysis}
+
+The swelling ratio of the sodium alginate hydrogel was calculated using:
+\begin{equation}
+\label{eq:swelling-ratio}
+Swelling\ Ratio = \frac{W_{wet} - W_{dry}}{W_{dry}} \times 100
+\end{equation}
+
+For the tested patch, the wet weight was 0.9 g and the dry weight was 0.406 g. Substituting these values gives:
+\begin{equation}
+\label{eq:swelling-result}
+Swelling\ Ratio = \frac{0.9 - 0.406}{0.406} \times 100 = 121.67\%
+\end{equation}
+
+The hydrogel therefore absorbed water and increased by approximately 122\%. This indicates moderate water-holding capacity, dense cross-linking, high mechanical strength, and the ability to entrap urease within the polymer network.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.62\textwidth]{Figures/aquatrack/image10}
+\caption{Dry weight measurement of the hydrogel patch}
+\label{fig:dry-weight}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.62\textwidth]{Figures/aquatrack/image8}
+\caption{Wet weight measurement of the sweat patch}
+\label{fig:wet-weight}
+\end{figure}
+
+\section{Classifier Performance}
+
+The classifier results show strong performance across both biomarker and context pipelines. In the biomarker pipeline, Logistic Regression achieved the highest cross-validation macro-F1 score of 0.9622 and a held-out test F1 score of 1.000 on 18 test samples. This suggests that the engineered biomarker features are linearly separable after preprocessing and composite feature construction.
+
+In the context pipeline, Random Forest and Gradient Boosting jointly achieved the highest cross-validation F1 score of 0.9957 and a held-out test F1 score of 1.000 on 58 test samples. These results indicate that environmental and skin-context features provide a strong secondary signal for contextual dehydration-risk discrimination.
+
+\begin{table}[htb]
+\fontsize{10}{12}\selectfont
+\centering
+\caption{Classifier comparison across both pipelines}
+\label{tab:classifier-comparison}
+\begin{tabular}{|p{3.4cm}|c|c|c|c|}
+\hline
+\textbf{Classifier} & \textbf{$D_{main}$ CV F1} & \textbf{$D_{main}$ Test F1} & \textbf{$D_{ctx}$ CV F1} & \textbf{$D_{ctx}$ Test F1}\\
+\hline
+Logistic Regression & 0.9622 & 1.000 & 0.8697 & 0.8710\\
+\hline
+Random Forest & 0.8396 & 1.000 & 0.9957 & 1.000\\
+\hline
+SVM (RBF) & 0.9210 & 0.9850 & 0.9360 & 0.9180\\
+\hline
+Gradient Boosting & 0.9050 & 0.9520 & 0.9957 & 1.000\\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Discussion}
+
+The results indicate that the AquaTrack architecture is feasible at both the sensing and computational levels. The sodium alginate hydrogel provides a practical and flexible medium for sweat collection and urea-responsive colorimetric detection. The machine learning pipeline demonstrates that biomarker features and context features can be modeled independently and then fused to improve interpretability.
+
+The perfect test scores should be interpreted carefully because the datasets are relatively small. The biomarker dataset contains only 90 observations, and the labels are derived rather than clinically annotated. However, the high cross-validation scores show that the engineered features are internally consistent and that the dual-pipeline design is promising for future validation on larger real-world datasets.
+
+The context pipeline adds value by identifying conditions where the biomarker-only prediction may require correction. This is important for mobile health use because sweat availability, exertion, and climate can influence sensor readings. A fused prediction score therefore provides a more practical decision layer than a single model output.

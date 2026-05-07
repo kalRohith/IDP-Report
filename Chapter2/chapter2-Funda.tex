@@ -1,0 +1,41 @@
+\chapter{Theory and Fundamentals}
+
+The AquaTrack system is built on three connected foundations: non-invasive sweat diagnostics, hydrogel-based sensor matrices, and data-driven dehydration prediction. Sweat and salivary biomarkers provide biochemical information, while environmental and activity signals provide context. Together, these inputs allow dehydration to be treated as a multimodal classification problem rather than a single-sensor thresholding task.
+
+\section{Sweat Patches and Non-Invasive Diagnostics}
+
+The demand for continuous and non-invasive health monitoring has driven the development of mobile health systems and flexible wearable biosensors. Traditional hydration tracking often depends on dietary logging, subjective thirst reporting, or episodic laboratory testing, which may not provide real-time insight. Wearable point-of-care platforms can reduce this delay by collecting physiological data continuously and sending it to an inference system.
+
+Sweat is especially useful because it can be collected without blood extraction and can reflect changes in electrolyte and metabolite concentrations. Sweat-based sensing has been used to monitor glucose, lactate, urea, chloride, and osmolality-related changes. In AquaTrack, sweat biomarkers are combined with salivary indicators, skin measurements, and environmental context to strengthen dehydration-risk prediction.
+
+\section{Hydrogels as the Sensor Matrix}
+
+Hydrogels are three-dimensional cross-linked polymer networks that can absorb and retain large quantities of water. Their softness, flexibility, and biocompatibility make them suitable for skin-interfaced wearable patches. Sodium alginate is particularly useful because it is naturally derived, biodegradable, and capable of forming ionic cross-links with calcium ions.
+
+When calcium chloride is added to sodium alginate, calcium ions bridge alginate chains and form the well-known ``egg-box'' structure. This cross-linked network improves the mechanical strength of the patch and helps retain water. Glycerol acts as a plasticizer, increasing flexibility and reducing folding during drying. The hydrogel matrix can also entrap enzymes such as urease, enabling biochemical reactions inside the patch.
+
+\section{Dehydration and Biomarker Concentration}
+
+Hydration status influences sweat volume, electrolyte concentration, and metabolic waste concentration. Dehydration can increase solute concentration in sweat and can affect the body's ability to regulate temperature, maintain electrolyte balance, and excrete metabolic waste. Basic electrolytes such as sodium and chloride are useful for assessing sweat loss, while nitrogenous waste markers such as urea provide a link to kidney-related physiological stress.
+
+In AquaTrack, biomarker features such as sweat chloride, sweat osmolality, salivary osmolality, salivary chloride, and total body water are used to derive a dehydration-risk target. Higher electrolyte and osmolality values are interpreted as stronger dehydration indicators, while lower total body water indicates reduced whole-body hydration.
+
+\section{Chronic Kidney Disease and Uremia}
+
+Chronic Kidney Disease (CKD) is a progressive condition involving reduced kidney filtration capacity. Poor hydration and accumulated metabolic waste can contribute to kidney-related complications. Since kidney function affects urea handling, urea concentration is a meaningful biomarker for severe dehydration and kidney stress.
+
+Urease hydrolyses urea into ammonia, which raises local pH. By embedding urease and phenol red inside a hydrogel patch, the system can produce a visible colorimetric response when urea-rich artificial sweat contacts the patch. Phenol red changes toward pink in alkaline conditions, and the intensity of the color shift provides a practical visual indicator for high urea concentration.
+
+\section{Machine Learning Fundamentals}
+
+The computational component treats dehydration prediction as a supervised classification problem after target labels are derived for the biomarker data. Several classifiers are suitable for this type of problem:
+\begin{itemize}
+\item Logistic Regression provides a linear baseline and is effective when engineered features are separable.
+\item Random Forest uses ensemble decision trees and can model non-linear feature interactions.
+\item Support Vector Machines with an RBF kernel are suitable for smaller datasets with non-linear decision boundaries.
+\item Gradient Boosting builds sequential learners and can capture residual patterns through staged optimization.
+\end{itemize}
+
+The AquaTrack model uses two independent pipelines. The primary pipeline processes biomarker features and predicts three dehydration-risk classes: Low, Medium, and High. The context pipeline processes environmental and skin-context features and predicts a binary contextual risk label. Their outputs are fused to form a final continuous dehydration score.
+
+These fundamentals guide the implementation described in the following chapters, where hydrogel synthesis, target engineering, preprocessing, feature selection, classifier training, and deployment are organized into a complete prototype workflow.

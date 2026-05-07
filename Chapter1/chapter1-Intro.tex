@@ -1,0 +1,74 @@
+\chapter{Introduction to AquaTrack}
+
+AquaTrack is a prototype-based multimodal system for context-aware dehydration prediction. The work brings together wearable sweat sensing, hydrogel-based biomarker capture, context detection, and machine learning to estimate dehydration risk in real time. The project is motivated by the need for non-invasive and interpretable hydration monitoring in daily-life mobile health environments.
+
+\section[Introduction]{\textbf{Introduction}}
+
+Continuous health monitoring has become increasingly important as mobile health systems and wearable biosensors move beyond episodic clinical measurements. Hydration assessment is a meaningful use case because dehydration affects physical performance, kidney function, metabolic regulation, and general wellness, yet it is often assessed through subjective reporting or delayed laboratory tests. AquaTrack focuses on a wearable multimodal approach that can use physiological, biochemical, and environmental signals together rather than relying on a single indicator.
+
+Recent research has explored dehydration screening through electrodermal activity, impedance, body temperature, smartphone photoplethysmography, and other non-invasive signals. These approaches can classify autonomic and contextual responses, but they may miss direct chemical evidence of fluid loss. Human sweat provides a useful non-invasive alternative because it carries electrolytes and metabolites such as chloride, osmolality-related indicators, lactate, glucose, and urea. In AquaTrack, sweat and salivary indicators are treated as primary biomarker signals, while environmental and activity features provide context for interpreting those biomarkers.
+
+A wearable sensing layer captures sweat, saliva, skin, and environmental signals. These signals pass through data acquisition, preprocessing, feature engineering, context detection, and dual-pipeline machine learning before the final dehydration risk label is served to the mobile application.
+
+\section[Literature Review]{\textbf{Literature Review}}
+
+Siyoucef et al. describe dehydration detection methods and identify body-fluid markers as a strong basis for reliable assessment. Their review highlights sweat as a promising non-invasive marker, supporting the use of sweat patches as a lower-discomfort and potentially disposable biosensing method.
+
+Saha et al. demonstrate a smartphone-assisted dehydration detection approach using facial features. Although this method is indirect, it shows that physiological and behavioral signals such as heart rate, body mass index, environmental conditions, and hydration patterns can influence dehydration prediction.
+
+Jain et al. propose a spiral dermal patch with discrete colorimetric indicators for sweat-rate quantification. The time taken for sweat to travel through the patch geometry indicates sweat production, showing how microfluidic channel design can support quantitative sweat analysis.
+
+Liu et al. discuss skin-interfaced colorimetric and microfluidic devices for on-demand sweat analysis. Their work emphasizes the value of flexible, wearable platforms for rapid sweat-based diagnosis.
+
+Lu et al. integrate a hydrogel interface with sweat-sensing patches to improve resting sweat collection and multi-information detection. This supports AquaTrack's use of hydrogel as both a collection medium and a sensing matrix.
+
+Steijlen et al. present a low-cost wearable fluidic sweat collection patch for analyte monitoring. The system is useful for continuous analysis but depends on adequate sweat production, making context awareness important for practical deployment.
+
+Sreeharsha et al. explore data-driven hydration monitoring using wearable sensors and machine learning. Their work supports the use of synthetic and wearable-device-oriented datasets for training dehydration prediction models.
+
+Wasilewski et al. review AI-assisted biomarker detection through sensors and biosensors. Their discussion confirms the role of machine learning in early diagnosis and monitoring when sensor measurements are noisy, multimodal, or indirect.
+
+Apergi et al. review AI-driven mobile health systems for precision hydration and personalized recommendations. Their work motivates the personalized and context-aware component of AquaTrack.
+
+The literature indicates four important research gaps. Many existing sweat patches rely on electrodes or PCB-based setups that increase cost and reduce biodegradability. Several approaches require high sweat volume, making them less suitable for sedentary users, elderly users, or low-sweat conditions. Some sensor materials and electronic components are expensive or difficult to source. Electrochemical assays can also require complex signal conversion from small current changes to interpretable concentration values.
+
+\section[Motivation]{\textbf{Motivation}}
+
+The motivation for AquaTrack is to create a practical hydration-monitoring system that combines direct biomarker evidence with the user's environmental and activity context. Dehydration does not occur from biochemical change alone; it is shaped by exertion, temperature, humidity, sweat availability, and individual physiology. A system that treats these signals together can provide a more reliable assessment than a single-modality detector.
+
+\section[Problem statement]{\textbf{Problem statement}}
+
+Existing dehydration-monitoring approaches are often invasive, dependent on laboratory testing, limited to high-sweat scenarios, or based on single sensing modalities that do not account for context. AquaTrack aims to design and evaluate a wearable multimodal system that predicts dehydration risk by combining hydrogel-based biomarker sensing with context-aware machine learning.
+
+\section[Objectives]{\textbf{Objectives}}
+
+The objectives of the project are:
+\begin{enumerate}
+\item To synthesize and evaluate a hydrogel-based wearable sweat patch for non-invasive biomarker collection.
+\item To develop a preprocessing and feature-engineering pipeline for biomarker and context datasets.
+\item To design a dual-pipeline machine learning model that fuses biomarker and context predictions into a dehydration risk score.
+\item To outline a deployable mobile health architecture using a backend inference service and mobile dashboard.
+\end{enumerate}
+
+\section[Brief Methodology of the project]{\textbf{Brief Methodology of the project}}
+
+The project methodology begins with hydrogel synthesis using sodium alginate and polyvinyl alcohol trials. The successful sodium alginate patches are evaluated for flexibility, swelling capacity, and colorimetric response to urea. In parallel, two datasets are prepared: a biomarker dataset containing sweat, salivary, body-composition, impedance, temperature, and activity features, and a context dataset containing skin, environmental, and time-related features.
+
+The computational workflow applies median imputation, winsorization, logarithmic transformation, robust scaling, composite feature engineering, feature selection, classifier training, and weighted prediction fusion. The final architecture exposes the trained model through a lightweight FastAPI backend and visualizes predictions using a React Native mobile dashboard.
+
+\section[Assumptions made / Constraints of the project]{\textbf{Assumptions made / Constraints of the project}}
+
+The prototype assumes that sweat and salivary biomarker trends provide useful hydration information when interpreted alongside contextual measurements. The biomarker dataset used for model development does not contain direct clinical ground-truth severity labels; therefore, dehydration-risk labels are derived through clustering and domain-based ranking. The prototype also assumes controlled preparation of artificial sweat and consistent imaging conditions for the colorimetric hydrogel response.
+
+The primary constraints include limited dataset size, prototype-stage sensing hardware, dependence on image quality for colorimetric interpretation, and the need for broader validation across diverse users and real-world conditions.
+
+\section[Organization of the report]{\textbf{Organization of the report}}
+
+This report is organized as follows:
+\begin{itemize}
+\item Chapter 2 discusses the fundamentals of sweat sensing, hydrogels, dehydration biomarkers, and chronic kidney disease relevance.
+\item Chapter 3 presents the methodology for hydrogel synthesis, datasets, target engineering, preprocessing, feature extraction, and model training.
+\item Chapter 4 describes the system architecture and implementation flow.
+\item Chapter 5 discusses experimental observations and machine learning results.
+\item Chapter 6 presents the conclusion, future scope, and learning outcomes.
+\end{itemize}

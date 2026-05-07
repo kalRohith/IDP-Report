@@ -1,0 +1,145 @@
+\chapter{Methodology and Model Design}
+
+The AquaTrack methodology combines laboratory prototype development with a computational prediction pipeline. Hydrogel patches are synthesized and evaluated for sweat collection and colorimetric response, while biomarker and context datasets are processed to train dehydration-risk classifiers. The design emphasizes modularity so that sensing, preprocessing, model training, fusion, and deployment can be improved independently.
+
+\section{Hydrogel Synthesis}
+
+Hydrogels are flexible polymer networks formed through extensive cross-linking between polymer chains. They can absorb and retain water, making them useful in biomedical applications such as wound dressing, drug delivery, implantable devices, and wearable biosensing. Two synthesis routes were evaluated in this work: sodium alginate hydrogel and polyvinyl alcohol hydrogel.
+
+\subsection{Sodium Alginate Hydrogel}
+
+Sodium alginate hydrogel was prepared by combining 2\% sodium alginate powder with distilled water. Glycerol was added as a plasticizer to improve flexibility and reduce folding during drying. The mixture was stirred at approximately 50--60$^\circ$C using a magnetic stirrer until uniform. After stirring, phenol red was added as the pH indicator.
+
+The mixture was allowed to cool to room temperature before adding activated urease enzyme. Urease was prepared from urease-active meal by dissolving it in distilled water and collecting the yellow upper layer containing the enzyme. The cooled hydrogel mixture was cast onto clean, dry petri plates with a thickness of approximately 0.5--1 cm.
+
+A 2\% calcium chloride solution was sprayed on the cast hydrogel and allowed to stand until a skin formed. The plates were then flooded with calcium chloride solution so that the hydrogel remained submerged. Calcium ions cross-linked the alginate chains by forming ionic bridges between carboxylate groups, producing the solid hydrogel network. After cross-linking, excess calcium chloride was removed and the hydrogels were washed three times with distilled water. The plates were covered with cling film with small holes and air-dried for 7--10 days until flexible patches were obtained.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.9\textwidth]{Figures/aquatrack/image5}
+\caption{Process of formation of sodium alginate hydrogel}
+\label{fig:alginate-process}
+\end{figure}
+
+\subsection{Polyvinyl Alcohol Hydrogel}
+
+Polyvinyl alcohol (PVA) hydrogels were synthesized using a cryogelation process. A mixture of 10\% PVA, distilled water, and glycerol was heated to approximately 80--90$^\circ$C. Phenol red was added after mixing, and activated urease was added only after cooling to protect enzyme activity. The mixture was poured into petri plates, sealed, and placed in a deep freezer at -20$^\circ$C overnight for the freeze cycle.
+
+The samples were thawed at room temperature the next day. The freeze-thaw process was repeated three times over four days. During freezing, water crystallization pushes PVA chains closer together, promoting hydrogen bonding and crystallite formation. During thawing, the crystallites remain and create pores where water or sweat can enter. In the performed trials, PVA hydrogels did not cross-link successfully enough for use in the final prototype, so sodium alginate was selected.
+
+\section{Colorimetric Assay}
+
+The sodium alginate hydrogel patches were tested for urease activity using artificial sweat with elevated urea concentration. Natural sweat is mildly acidic, while sweat from patients with severe kidney stress or high urea burden can contain increased urea concentration. When urea contacts immobilized urease inside the hydrogel, it breaks down into ammonia. Since ammonia is basic, it increases pH and causes phenol red to shift toward a bright pink color.
+
+Multiple images of the color change were captured to support model training and visual assessment. The color intensity is treated as a practical indicator of high urea concentration and therefore as a possible marker for severe dehydration or kidney-related stress.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.65\textwidth]{Figures/aquatrack/image11}
+\caption{Colorimetric response of the hydrogel after exposure to urea-rich artificial sweat}
+\label{fig:colorimetric-response}
+\end{figure}
+
+\section{Dataset Set Description}
+
+Two datasets were used for computational modeling. The main biomarker dataset, denoted as $D_{main}$, contains 90 observations from 10 healthy adult subjects measured across progressive running intervals. It contains 33 raw features across six modality groups: sweat biomarkers, salivary biomarkers, body composition and hydration, segmental bioelectrical impedance, peripheral skin temperature, and activity parameters.
+
+The context dataset, denoted as $D_{ctx}$, contains 290 observations with 11 features measuring skin electrical properties, transepidermal water loss, ambient meteorological conditions, and time-of-day encoding.
+
+\begin{table}[htb]
+\fontsize{10}{12}\selectfont
+\centering
+\renewcommand{\arraystretch}{1.6}
+\setlength{\extrarowheight}{4pt}
+\caption{Dataset characteristics}
+\label{tab:dataset-characteristics}
+\begin{tabular}{|p{4cm}|p{4.2cm}|p{4.2cm}|}
+\hline
+\textbf{Property} & \textbf{Main Dataset ($D_{main}$)} & \textbf{Context Dataset ($D_{ctx}$)}\\
+\hline
+Total samples & 90 & 290\\
+\hline
+Raw features & 33 & 11\\
+\hline
+Target variable & dehydration\_risk (3-class) & dehydration\_label (binary)\\
+\hline
+Class balance & 30/30/30, quantile based & 50/50, balanced\\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Target Engineering}
+
+The biomarker dataset does not contain clinical ground-truth dehydration severity labels. Therefore, the target variable dehydration\_risk $\in$ \{Low, Medium, High\} is derived using a two-phase unsupervised learning procedure. A domain-weighted feature matrix is constructed by applying a 2$\times$ weight to primary biomarker features and a 0.5$\times$ weight to impedance features. K-Means clustering with $k=3$ is then applied.
+
+Cluster labels are assigned using the composite rank score:
+\begin{equation}
+\label{eq:rank-score}
+rank = \mu(Cl_{sw}) + \mu(Osm_{sw}) + \mu(Osm_{sal}) + \mu(Cl_{sal}) - \mu(TBW)
+\end{equation}
+
+Here, $\mu(\cdot)$ denotes the within-cluster mean. Higher sweat chloride, sweat osmolality, salivary osmolality, and salivary chloride indicate higher fluid depletion, while lower total body water indicates reduced hydration. The cluster with the lowest rank is assigned Low risk, the middle cluster Medium risk, and the highest cluster High risk.
+
+\section{Preprocessing Pipeline}
+
+\subsection{Median Imputation}
+
+The biomarker dataset contains 311 missing values, corresponding to approximately 10.5\% of 2,970 cells. Missing values are concentrated in sweat and salivary marker columns. Column-wise median imputation is used because the data distribution is skewed and the mean could be inflated by extreme values. The median is computed only from the training partition within each cross-validation fold.
+
+\subsection{Winsorization}
+
+Extreme values in sweat and salivary biomarker columns are handled through winsorization. Observations exceeding the selected boundary are clipped to the fence value rather than deleted. A 3$\times$ IQR boundary is used because skewed distributions can inflate standard deviation and reduce the reliability of z-score thresholds.
+
+\subsection{Logarithmic Transformation}
+
+Logarithmic transformation compresses large values in skewed distributions and stabilizes variance. Five biomarker features receive a $\log(1+x)$ transformation: salivary protein concentration, salivary amylase, salivary cortisol, salivary potassium, and salivary osmolality.
+
+\subsection{Robust Scaling Normalization}
+
+Robust scaling uses the median and interquartile range instead of the mean and standard deviation. This makes it resistant to outliers. All features in both pipelines are normalized using robust scaling after imputation, winsorization, and transformation.
+
+\section{Feature Extraction and Selection}
+
+Feature extraction reduces multicollinearity and converts related variables into clinically meaningful composites. Highly correlated pairs with $|r| > 0.85$ are consolidated rather than removed arbitrarily.
+
+\begin{table}[htb]
+\fontsize{10}{12}\selectfont
+\centering
+\renewcommand{\arraystretch}{1.6}
+\setlength{\extrarowheight}{4pt}
+\caption{Selected feature descriptions}
+\label{tab:feature-descriptions}
+\begin{tabular}{|p{3.4cm}|p{3.8cm}|p{4.4cm}|p{2.2cm}|}
+\hline
+\textbf{Engineered Feature} & \textbf{Formula} & \textbf{Clinical Rationale} & \textbf{Pipeline}\\
+\hline
+Sweat Stress Index & $Cl_{sw} + Osm_{sw}$ & Combines correlated sweat markers & Main, 2$\times$ weight\\
+\hline
+Saliva Dehydration Index & $Osm_{sal} + Cl_{sal}$ & Combines correlated salivary markers & Main\\
+\hline
+Hydration Ratio & $TBW/body\_weight$ & Normalizes whole-body water for body size & Main\\
+\hline
+Exertion Load & $speed \times interval$ & Quantifies cumulative exercise-induced stress & Main\\
+\hline
+Skin Hydration Index & $Capacitance/(Impedance/1000)$ & Amplifies skin hydration signal & Context\\
+\hline
+Environmental Stress Index & $T_{amb} \times (1 - RH/100)$ & Represents hot and dry environmental demand & Context\\
+\hline
+Skin Stress Score & $TEWL \times T_{skin}$ & Combines barrier loss and skin temperature & Context\\
+\hline
+\end{tabular}
+\end{table}
+
+After feature construction, Random Forest importance scoring is used for feature selection. This embedded method is preferred over purely univariate filtering because it can capture non-linear and interaction-level feature relevance. The top 12 features are retained independently for each pipeline.
+
+\section{Model Training, Selection and Evaluation}
+
+Four classifier families are evaluated: Logistic Regression, Random Forest, RBF-kernel Support Vector Machine, and Gradient Boosting. Hyperparameters are optimized using GridSearchCV over predefined grids, including regularization strength, tree depth, ensemble size, and kernel bandwidth. Stratified 10-fold cross-validation is used for model selection, and macro-averaged F1 score is used as the main metric.
+
+The final fused dehydration score is defined as:
+\begin{equation}
+\label{eq:fusion-score}
+F = 0.6 \times S_{main} + 0.4 \times S_{ctx}
+\end{equation}
+
+In Equation \ref{eq:fusion-score}, $S_{main}$ is the biomarker risk score and $S_{ctx}$ is the context risk score. The higher weight assigned to the main pipeline reflects the stronger clinical relevance of direct biomarker evidence.

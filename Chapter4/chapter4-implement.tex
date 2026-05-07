@@ -1,0 +1,63 @@
+\chapter{System Architecture and Implementation}
+\label{ch:system-architecture}
+
+The AquaTrack implementation is organized as a layered mobile health system. The architecture begins with multimodal sensing, continues through preprocessing and dual-pipeline prediction, and ends with backend inference and mobile visualization. This modular structure allows the sensing prototype, data-processing workflow, and deployment interface to be improved independently.
+
+\section{System Architecture}
+
+The proposed system integrates wearable sensing, context-aware processing, and machine learning-based inference for real-time dehydration risk prediction. The architecture is designed for scalability, interpretability, and practical deployment in mobile health environments.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.85\textwidth]{Figures/aquatrack/image7}
+\caption{End-to-end modular system architecture for AquaTrack}
+\label{fig:aquatrack-architecture}
+\end{figure}
+
+Figure \ref{fig:aquatrack-architecture} presents the overall flow of the proposed system.
+
+At the input stage, a wearable sensing unit captures physiological and environmental signals relevant to hydration status. These include primary sweat and salivary biomarkers, skin-based measurements such as temperature and conductance, and ambient conditions such as temperature and humidity. The data acquisition module performs signal conditioning, sensor synchronization, analog-to-digital conversion where required, and timestamping before sending structured data for processing.
+
+The incoming data is passed through a preprocessing pipeline that improves consistency and robustness. Missing values are handled using median imputation, extreme values are clipped through winsorization, skewed variables are transformed logarithmically, and feature distributions are normalized through robust scaling. Domain-informed composite features are then constructed to represent physiological stress, hydration state, activity load, and environmental demand.
+
+\section{Context Detection Module}
+
+The context detection module identifies activity intensity, climate class, and sweat availability. This module is important because biomarker readings can be affected by the amount of sweat available and the user's immediate environment. For example, a low-sweat sedentary state may require different interpretation from a high-sweat exercise state. The context module therefore acts as a corrective signal for the biomarker pipeline.
+
+\section{Dual-Pipeline Prediction Engine}
+
+The core prediction engine uses two independent machine learning pipelines. The primary biomarker pipeline classifies hydration state into Low, Medium, and High risk. The secondary context pipeline predicts whether the surrounding conditions indicate low or high contextual dehydration risk. Their outputs are fused using a weighted score so that the final result reflects both biochemical evidence and real-world context.
+
+\begin{table}[htb]
+\fontsize{10}{12}\selectfont
+\centering
+\caption{Dual-pipeline model building and weighted fusion procedure}
+\label{tab:algorithm}
+\begin{tabular}{|p{12cm}|}
+\hline
+\textbf{Input:} $D_{main}$ with selected biomarker features and $D_{ctx}$ with selected context features\\
+\textbf{Output:} fused score $F \in [0,1]$, risk label $\in$ \{Low, Medium, High\}, and consistency flag\\
+\hline
+1. Prepare $X_m, y_m$ from $D_{main}$ and perform stratified train-test split.\\
+2. Train Logistic Regression, Random Forest, SVM, and Gradient Boosting with robust scaling and balanced class weighting.\\
+3. Select the best biomarker classifier using 10-fold cross-validation and macro F1 score.\\
+4. Evaluate the selected biomarker model once on the held-out test set.\\
+5. Prepare $X_c, y_c$ from $D_{ctx}$ and repeat model selection using binary F1 score.\\
+6. Compute $S_{main}$ and $S_{ctx}$ from the selected model probabilities.\\
+7. Compute $F = 0.6 \times S_{main} + 0.4 \times S_{ctx}$.\\
+8. Flag conflicts when categorical prediction and fused score disagree beyond threshold limits.\\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Backend and Mobile Deployment}
+
+For deployment, the trained models are served through a lightweight FastAPI backend. The API receives structured sensor and context inputs, applies preprocessing, loads the selected model artifacts, performs prediction, and returns a JSON response containing the risk label, confidence score, and recommendation fields.
+
+The mobile application is planned using React Native. It visualizes hydration status, risk history, alerts, and personalized recommendations. The mobile dashboard is designed to make model predictions understandable to users rather than presenting raw sensor data alone.
+
+\section{Monitoring and Interpretability}
+
+The architecture includes monitoring and logging for model performance, drift, and alert history. An interpretability module can expose feature-importance explanations so that users and developers can understand which signals contributed most to a prediction. This is particularly important in health-monitoring systems because users need confidence in the recommendation and developers need visibility into failure cases.
+
+The implemented architecture therefore connects laboratory sensing, data engineering, machine learning, and mobile deployment into a single workflow. The following chapter discusses the observed prototype performance and classification results.
