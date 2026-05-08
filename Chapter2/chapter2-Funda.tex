@@ -26,16 +26,27 @@ Chronic Kidney Disease (CKD) is a progressive condition involving reduced kidney
 
 Urease hydrolyses urea into ammonia, which raises local pH. By embedding urease and phenol red inside a hydrogel patch, the system can produce a visible colorimetric response when urea-rich artificial sweat contacts the patch. Phenol red changes toward pink in alkaline conditions, and the intensity of the color shift provides a practical visual indicator for high urea concentration.
 
-\section{Machine Learning Fundamentals}
+\section{Computer Science Fundamentals}
 
-The computational component treats dehydration prediction as a supervised classification problem after target labels are derived for the biomarker data. Several classifiers are suitable for this type of problem:
+The AquaTrack system leverages key concepts across data science, machine learning, and mobile system design to transform raw physiological signals into actionable insights.
+
+\subsection{Machine Learning Classifiers}
+Dehydration prediction is treated as a supervised classification problem. The system evaluates several families of classifiers:
 \begin{itemize}
-\item Logistic Regression provides a linear baseline and is effective when engineered features are separable.
-\item Random Forest uses ensemble decision trees and can model non-linear feature interactions.
-\item Support Vector Machines with an RBF kernel are suitable for smaller datasets with non-linear decision boundaries.
-\item Gradient Boosting builds sequential learners and can capture residual patterns through staged optimization.
+\item \textbf{Logistic Regression}: A linear baseline model that estimates class probabilities using the sigmoid function, effective for separable feature spaces.
+\item \textbf{Random Forest}: An ensemble of decision trees that uses bagging and feature randomness to handle non-linear interactions and prevent overfitting.
+\item \textbf{Support Vector Machines}: A model that finds the optimal hyperplane in a high-dimensional space, utilizing RBF kernels for complex decision boundaries.
+\item \textbf{Gradient Boosting}: A staged ensemble technique that builds sequential weak learners to minimize a loss function through gradient descent.
 \end{itemize}
 
-The AquaTrack model uses two independent pipelines. The primary pipeline processes biomarker features and predicts three dehydration-risk classes: Low, Medium, and High. The context pipeline processes environmental and skin-context features and predicts a binary contextual risk label. Their outputs are fused to form a final continuous dehydration score.
+\subsection{Model Evaluation Metrics}
+Once a model is trained, we need to know how well it performs. For beginners, the most common metrics used to "score" a model are:
+\begin{itemize}
+\item \textbf{Accuracy}: The percentage of total guesses the model got right. While simple, it can be misleading if one class is much more common than others.
+\item \textbf{Precision}: Out of all the times the model predicted "High Risk," how many were actually correct? It measures the quality of the positive predictions.
+\item \textbf{Recall}: Out of all the actual "High Risk" cases, how many did the model manage to find? it measures the ability to find all relevant cases.
+\item \textbf{F1-Score}: A balanced score that combines both Precision and Recall into a single number. This is often the best way to see the overall health of a model.
+\end{itemize}
+
 
 These fundamentals guide the implementation described in the following chapters, where hydrogel synthesis, target engineering, preprocessing, feature selection, classifier training, and deployment are organized into a complete prototype workflow.
