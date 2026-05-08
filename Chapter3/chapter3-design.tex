@@ -40,7 +40,7 @@ Multiple images of the color change were captured to support model training and 
 \label{fig:colorimetric-response}
 \end{figure}
 
-\section{Dataset Set Description}
+\section{Dataset Description}
 
 Two datasets were used for computational modeling. The main biomarker dataset, denoted as $D_{main}$, contains 90 observations from 10 healthy adult subjects measured across progressive running intervals. It contains 33 raw features across six modality groups: sweat biomarkers, salivary biomarkers, body composition and hydration, segmental bioelectrical impedance, peripheral skin temperature, and activity parameters.
 
@@ -111,17 +111,17 @@ Feature extraction reduces multicollinearity and converts related variables into
 \label{tab:feature-descriptions}
 \begin{tabular}{|p{3.4cm}|p{3.8cm}|p{4.4cm}|p{2.2cm}|}
 \hline
-\textbf{Engineered Feature} & \textbf{Formula} & \textbf{Clinical Rationale} & \textbf{Pipeline}\\
+\textbf{\makecell[l]{Engineered\\ Feature}} & \textbf{Formula} & \textbf{Clinical Rationale} & \textbf{Pipeline}\\
 \hline
-Sweat Stress Index & $Cl_{sw} + Osm_{sw}$ & Combines correlated sweat markers & Main, 2$\times$ weight\\
+Sweat Stress Index & $Cl_{sw} + Osm_{sw}$ & Combines correlated sweat markers & Main\\
 \hline
 Saliva Dehydration Index & $Osm_{sal} + Cl_{sal}$ & Combines correlated salivary markers & Main\\
 \hline
-Hydration Ratio & $TBW/body\_weight$ & Normalizes whole-body water for body size & Main\\
+Hydration Ratio & $TBW/body\_weight$ & Normalizes the whole-body water for body size & Main\\
 \hline
 Exertion Load & $speed \times interval$ & Quantifies cumulative exercise-induced stress & Main\\
 \hline
-Skin Hydration Index & $Capacitance/(Impedance/1000)$ & Amplifies skin hydration signal & Context\\
+Skin Hydration Index & \makecell[l]{$Capacitance/$ \\ $(Impedance/1000)$} & Amplifies the skin hydration signal & Context\\
 \hline
 Environmental Stress Index & $T_{amb} \times (1 - RH/100)$ & Represents hot and dry environmental demand & Context\\
 \hline
