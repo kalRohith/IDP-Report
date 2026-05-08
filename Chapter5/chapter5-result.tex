@@ -10,17 +10,22 @@ PVA hydrogel trials were not successful because the hydrogel did not cross-link 
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.62\textwidth]{Figures/aquatrack/image2}
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{Figures/aquatrack/image2}
 \caption{Prototype of the functional sodium alginate sweat patch}
 \label{fig:functional-patch}
-\end{figure}
-
-\begin{figure}[htb]
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
 \centering
-\includegraphics[width=0.72\textwidth]{Figures/aquatrack/image3}
+\includegraphics[width=\textwidth]{Figures/aquatrack/image3}
 \caption{Functional sweat patches produced during sodium alginate trials}
 \label{fig:functional-patches}
+\end{minipage}
 \end{figure}
+
+\clearpage
 
 \section{Swelling Ratio Analysis}
 
@@ -40,23 +45,61 @@ The hydrogel therefore absorbed water and increased by approximately 122\%. This
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.62\textwidth]{Figures/aquatrack/image10}
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{Figures/aquatrack/image10}
 \caption{Dry weight measurement of the hydrogel patch}
 \label{fig:dry-weight}
-\end{figure}
-
-\begin{figure}[htb]
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
 \centering
-\includegraphics[width=0.62\textwidth]{Figures/aquatrack/image8}
+\includegraphics[width=\textwidth]{Figures/aquatrack/image8}
 \caption{Wet weight measurement of the sweat patch}
 \label{fig:wet-weight}
+\end{minipage}
 \end{figure}
+
+\clearpage
 
 \section{Classifier Performance}
 
-The classifier results show strong performance across both biomarker and context pipelines. In the biomarker pipeline, Logistic Regression achieved the highest cross-validation macro-F1 score of 0.9622 and a held-out test F1 score of 1.000 on 18 test samples. This suggests that the engineered biomarker features are linearly separable after preprocessing and composite feature construction.
+\begin{figure}[!ht]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{Figures/aquatrack/image12}
+\caption{Confusion Matrix: Logistic Regression}
+\label{fig:cm-lr}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{Figures/aquatrack/image13}
+\caption{Confusion Matrix: Random Forest}
+\label{fig:cm-rf}
+\end{minipage}
 
-In the context pipeline, Random Forest and Gradient Boosting jointly achieved the highest cross-validation F1 score of 0.9957 and a held-out test F1 score of 1.000 on 58 test samples. These results indicate that environmental and skin-context features provide a strong secondary signal for contextual dehydration-risk discrimination.
+\vspace{0.5cm}
+
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{Figures/aquatrack/image14}
+\caption{Confusion Matrix: SVM (RBF)}
+\label{fig:cm-svm}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{Figures/aquatrack/image15}
+\caption{Confusion Matrix: Gradient Boosting}
+\label{fig:cm-gb}
+\end{minipage}
+\end{figure}
+
+Figures \ref{fig:cm-lr}--\ref{fig:cm-gb} show the confusion matrices for each of the available classifiers across different risk levels. In the biomarker pipeline, Logistic Regression achieved the highest cross-validation macro-F1 score of 0.9622 and a held-out test F1 score of 1.000 on 18 test samples. 
+
+In the context pipeline, Random Forest and Gradient Boosting jointly achieved the highest cross-validation F1 score of 0.9957 and a held-out test F1 score of 1.000 on 58 test samples. Table \ref{tab:classifier-comparison} summarizes the quantitative performance metrics for both pipelines.
 
 \begin{table}[htb]
 \fontsize{10}{12}\selectfont
@@ -82,6 +125,6 @@ Gradient Boosting & 0.9050 & 0.9520 & 0.9957 & 1.000\\
 
 The results indicate that the AquaTrack architecture is feasible at both the sensing and computational levels. The sodium alginate hydrogel provides a practical and flexible medium for sweat collection and urea-responsive colorimetric detection. The machine learning pipeline demonstrates that biomarker features and context features can be modeled independently and then fused to improve interpretability.
 
-The perfect test scores should be interpreted carefully because the datasets are relatively small. The biomarker dataset contains only 90 observations, and the labels are derived rather than clinically annotated. However, the high cross-validation scores show that the engineered features are internally consistent and that the dual-pipeline design is promising for future validation on larger real-world datasets.
+The perfect test scores should be interpreted carefully because the datasets are relatively small and the labels are derived rather than clinically annotated. However, the high cross-validation scores show that the engineered features are internally consistent and that the dual-pipeline design is promising for future validation on larger real-world datasets.
 
 The context pipeline adds value by identifying conditions where the biomarker-only prediction may require correction. This is important for mobile health use because sweat availability, exertion, and climate can influence sensor readings. A fused prediction score therefore provides a more practical decision layer than a single model output.
