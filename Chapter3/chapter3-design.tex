@@ -27,19 +27,6 @@ Polyvinyl alcohol (PVA) hydrogels were synthesized using a cryogelation process.
 
 The samples were thawed at room temperature the next day. The freeze-thaw process was repeated three times over four days. During freezing, water crystallization pushes PVA chains closer together, promoting hydrogen bonding and crystallite formation. During thawing, the crystallites remain and create pores where water or sweat can enter. In the performed trials, PVA hydrogels did not cross-link successfully enough for use in the final prototype, so sodium alginate was selected.
 
-\section{Colorimetric Assay}
-
-The sodium alginate hydrogel patches were tested for urease activity using artificial sweat with elevated urea concentration. Natural sweat is mildly acidic, while sweat from patients with severe kidney stress or high urea burden can contain increased urea concentration. When urea contacts immobilized urease inside the hydrogel, it breaks down into ammonia. Since ammonia is basic, it increases pH and causes phenol red to shift toward a bright pink color.
-
-Multiple images of the color change were captured to support model training and visual assessment. The color intensity is treated as a practical indicator of high urea concentration and therefore as a possible marker for severe dehydration or kidney-related stress.
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.65\textwidth]{Figures/aquatrack/image11}
-\caption{Colorimetric response of hydrogel to urea-rich artificial sweat}
-\label{fig:colorimetric-response}
-\end{figure}
-
 \section{Dataset Description}
 
 Two datasets were used for computational modeling. The main biomarker dataset, denoted as $D_{main}$, contains 90 observations from 10 healthy adult subjects measured across progressive running intervals. It contains 33 raw features across six modality groups: sweat biomarkers, salivary biomarkers, body composition and hydration, segmental bioelectrical impedance, peripheral skin temperature, and activity parameters.
@@ -84,23 +71,49 @@ Here, $\mu(\cdot)$ denotes the within-cluster mean. Higher sweat chloride, sweat
 
 \subsection{Median Imputation}
 
-The biomarker dataset contains 311 missing values, corresponding to approximately 10.5\% of 2,970 cells. Missing values are concentrated in sweat and salivary marker columns. Column-wise median imputation is used because the data distribution is skewed and the mean could be inflated by extreme values. The median is computed only from the training partition within each cross-validation fold.
+Missing values are concentrated in sweat and salivary marker columns. Column-wise median imputation is used because the data distribution is skewed and the mean could be inflated by extreme values. The median is computed only from the training partition within each cross-validation fold. For a feature $x$ with missing entries, the imputed value $\hat{x}_i$ is given by:
+\begin{equation}
+\label{eq:median-imputation}
+\hat{x}_i = 
+\begin{cases} 
+x_i & \text{if } x_i \text{ is observed} \\
+\text{median}(X_{train}) & \text{if } x_i \text{ is missing}
+\end{cases}
+\end{equation}
 
 \subsection{Winsorization}
 
-Extreme values in sweat and salivary biomarker columns are handled through winsorization. Observations exceeding the selected boundary are clipped to the fence value rather than deleted. A 3$\times$ IQR boundary is used because skewed distributions can inflate standard deviation and reduce the reliability of z-score thresholds.
+Extreme values in sweat and salivary biomarker columns are handled through winsorization. Observations exceeding the selected boundary are clipped to the fence value rather than deleted. A 3$\times$ IQR boundary is used because skewed distributions can inflate standard deviation and reduce the reliability of z-score thresholds. The winsorized value $x'_i$ is defined as:
+\begin{equation}
+\label{eq:winsorization}
+x'_i = 
+\begin{cases} 
+Q_1 - 3 \times IQR & \text{if } x_i < Q_1 - 3 \times IQR \\
+Q_3 + 3 \times IQR & \text{if } x_i > Q_3 + 3 \times IQR \\
+x_i & \text{otherwise}
+\end{cases}
+\end{equation}
+where $IQR = Q_3 - Q_1$.
 
 \subsection{Logarithmic Transformation}
 
-Logarithmic transformation compresses large values in skewed distributions and stabilizes variance. Five biomarker features receive a $\log(1+x)$ transformation: salivary protein concentration, salivary amylase, salivary cortisol, salivary potassium, and salivary osmolality.
+Logarithmic transformation compresses large values in skewed distributions and stabilizes variance. Five biomarker features receive a $\log(1+x)$ transformation: salivary protein concentration, salivary amylase, salivary cortisol, salivary potassium, and salivary osmolality. The transformation is expressed as:
+\begin{equation}
+\label{eq:log-transform}
+x_{log} = \ln(1 + x)
+\end{equation}
 
 \subsection{Robust Scaling Normalization}
 
-Robust scaling uses the median and interquartile range instead of the mean and standard deviation. This makes it resistant to outliers. All features in both pipelines are normalized using robust scaling after imputation, winsorization, and transformation.
+Robust scaling uses the median and interquartile range instead of the mean and standard deviation. This makes it resistant to outliers. All features in both pipelines are normalized using robust scaling after imputation, winsorization, and transformation. The scaled value $x_{robust}$ is calculated as:
+\begin{equation}
+\label{eq:robust-scaling}
+x_{robust} = \frac{x - \text{median}(X)}{Q_3(X) - Q_1(X)}
+\end{equation}
 
 \section{Feature Extraction and Selection}
 
-Feature extraction reduces multicollinearity and converts related variables into clinically meaningful composites. Highly correlated pairs with $|r| > 0.85$ are consolidated rather than removed arbitrarily.
+To bridge the gap between raw sensor data and latent states, a domain-driven feature engineering strategy is employed. Feature extraction is designed to reduce multicollinearity and synthesize clinically meaningful representations of hydration status. Interaction-aware feature representations are constructed by consolidating highly correlated variables into composite indices, thereby ensuring dimensional optimization without loss of predictive relevance. These are detailed in Table \ref{tab:feature-descriptions}. Following the synthesis of engineered features, an embedded feature selection mechanism is implemented to identify the most discriminative variables for each pipeline.
 
 \begin{table}[htb]
 \fontsize{10}{12}\selectfont
@@ -130,16 +143,29 @@ Skin Stress Score & $TEWL \times T_{skin}$ & Combines barrier loss and skin temp
 \end{tabular}
 \end{table}
 
-After feature construction, Random Forest importance scoring is used for feature selection. This embedded method is preferred over purely univariate filtering because it can capture non-linear and interaction-level feature relevance. The top 12 features are retained independently for each pipeline.
-
 \section{Model Training, Selection and Evaluation}
 
-Four classifier families are evaluated: Logistic Regression, Random Forest, RBF-kernel Support Vector Machine, and Gradient Boosting. Hyperparameters are optimized using GridSearchCV over predefined grids, including regularization strength, tree depth, ensemble size, and kernel bandwidth. Stratified 10-fold cross-validation is used for model selection, and macro-averaged F1 score is used as the main metric.
+The prediction engine evaluates four distinct classifier families: Logistic Regression (LR), Random Forest (RF), RBF-kernel Support Vector Machine (SVM), and Gradient Boosting. Hyperparameter optimization is performed using GridSearchCV over extensive search spaces, including regularization penalties, tree depth, and kernel bandwidth. Model selection is guided by stratified 10-fold cross-validation to ensure that each fold maintains the class distribution of the original dataset. The overall model construction and weighted fusion logic is formalized in Algorithm \ref{alg:fusion-procedure}.
 
-The final fused dehydration score is defined as:
+The final fused dehydration score $F$ is computed as a weighted combination of the independent pipeline outputs,showing biomarker-driven versus context-driven evidence:
 \begin{equation}
 \label{eq:fusion-score}
 F = 0.6 \times S_{main} + 0.4 \times S_{ctx}
 \end{equation}
 
-In Equation \ref{eq:fusion-score}, $S_{main}$ is the biomarker risk score and $S_{ctx}$ is the context risk score. The higher weight assigned to the main pipeline reflects the stronger clinical relevance of direct biomarker evidence.
+\begin{algorithm}
+\caption{Dual-pipeline model building and weighted fusion procedure}
+\label{alg:fusion-procedure}
+\begin{algorithmic}[1]
+\State \textbf{Input:} $D_{main}$ with selected biomarker features, $D_{ctx}$ with selected context features
+\State \textbf{Output:} fused score $F \in [0,1]$, risk label $\in$ \{Low, Medium, High\}, consistency flag
+\State Prepare $X_m, y_m$ from $D_{main}$ and perform stratified train-test split.
+\State Train Logistic Regression, Random Forest, SVM, and Gradient Boosting with robust scaling and balanced class weighting.
+\State Select the best biomarker classifier using 10-fold cross-validation and macro F1 score.
+\State Evaluate the selected biomarker model once on the held-out test set.
+\State Prepare $X_c, y_c$ from $D_{ctx}$ and repeat model selection using binary F1 score.
+\State Compute $S_{main}$ and $S_{ctx}$ from the selected model probabilities.
+\State Compute $F = 0.6 \times S_{main} + 0.4 \times S_{ctx}$.
+\State Flag conflicts when the categorical prediction and weighted fused score disagree beyond threshold limits.
+\end{algorithmic}
+\end{algorithm}
