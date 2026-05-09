@@ -40,13 +40,30 @@ Dehydration prediction is treated as a supervised classification problem. The sy
 \end{itemize}
 
 \subsection{Model Evaluation Metrics}
-Once a model is trained, we need to know how well it performs. For beginners, the most common metrics used to "score" a model are:
+The performance of the classification models is quantitatively assessed using standard statistical metrics derived from the confusion matrix. These metrics evaluate the model's ability to correctly identify True Positives (TP), True Negatives (TN), False Positives (FP), and False Negatives (FN).
+
 \begin{itemize}
-\item \textbf{Accuracy}: The percentage of total guesses the model got right. While simple, it can be misleading if one class is much more common than others.
-\item \textbf{Precision}: Out of all the times the model predicted "High Risk," how many were actually correct? It measures the quality of the positive predictions.
-\item \textbf{Recall}: Out of all the actual "High Risk" cases, how many did the model manage to find? it measures the ability to find all relevant cases.
-\item \textbf{F1-Score}: A balanced score that combines both Precision and Recall into a single number. This is often the best way to see the overall health of a model.
+\item \textbf{Accuracy}: 
+\begin{equation}
+\label{eq:accuracy}
+\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+
+\item \textbf{Precision}: 
+\begin{equation}
+\label{eq:precision}
+\text{Precision} = \frac{TP}{TP + FP}
+\end{equation}
+
+\item \textbf{Recall}: 
+\begin{equation}
+\label{eq:recall}
+\text{Recall} = \frac{TP}{TP + FN}
+\end{equation}
+
+\item \textbf{F1-Score}: 
+\begin{equation}
+\label{eq:f1-score}
+\text{F1-Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+\end{equation}
 \end{itemize}
-
-
-These fundamentals guide the implementation described in the following chapters, where hydrogel synthesis, target engineering, preprocessing, feature selection, classifier training, and deployment are organized into a complete prototype workflow.
