@@ -5,18 +5,9 @@ The AquaTrack implementation is organized as a layered mobile health system. The
 
 \section{System Architecture}
 
-The AquaTrack framework is conceptualized as a context-aware, multimodal mobile health (m-health) system designed to deliver robust dehydration risk assessments. The architecture follows a modular, layered paradigm that facilitates end-to-end data integrity—from high-fidelity physiological acquisition to real-time mobile visualization. By integrating biochemical sensing with environmental context, the system achieves a level of adaptive inference necessary for practical wearable deployment.
+The AquaTrack framework is conceptualized as a context-aware, multimodal mobile health (m-health) system designed to deliver robust dehydration risk assessments. The architecture follows a modular, layered paradigm that facilitates end-to-end data integrity -- from high-fidelity physiological acquisition to real-time mobile visualization. By integrating biochemical sensing with environmental context, the system achieves a level of adaptive inference necessary for practical wearable deployment.
 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.85\textwidth]{Figures/aquatrack/image7}
-\caption{End-to-end modular system architecture for AquaTrack}
-\label{fig:aquatrack-architecture}
-\end{figure}
-
-Figure \ref{fig:aquatrack-architecture} illustrates the comprehensive data flow and component interactions within the framework. The system is partitioned into four primary functional layers: the Physical Sensing Layer, the Data Engineering Pipeline, the Dual-Pipeline Prediction Engine, and the Backend-Mobile Deployment Interface. This hierarchical structure ensures that localized sensing failures or environmental noise are mitigated through cross-modal verification and contextual adaptation.
-
-The data journey begins at the Wearable Sensing Layer, where a suite of heterogeneous sensors captures physiological and ambient signals. This includes the functional hydrogel matrix for sweat biomarker observation, salivary assays for electrolyte monitoring, and skin-interfaced sensors for peripheral temperature and conductance. Complementing these physiological streams is an environmental sensor array that monitors ambient temperature and relative humidity, providing the necessary meteorological context to interpret the biochemical signals accurately.
+Figure \ref{fig:aquatrack-architecture} provides a high-level overview of the integrated AquaTrack ecosystem. The architecture is designed to handle the complexities of multimodal physiological data while ensuring low-latency inference and high user engagement through its layered organizational approach.
 
 \section{Preprocessing and Feature Engineering Pipeline}
 
@@ -34,3 +25,9 @@ To ensure deployment feasibility, the prediction framework is served via a RESTf
 
 The user interface is implemented as a React Native iOS dashboard, providing a real-time visualization of the user's hydration trajectory. The mobile application translates complex model outputs into actionable health insights, including trend monitoring, personalized alerts, and hydration recommendations. By connecting laboratory-grade sensing with a modern mobile interface, the AquaTrack architecture demonstrates a scalable pathway for next-generation hydration monitoring in diverse real-world settings.
 
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.85\textwidth]{Figures/aquatrack/image7}
+\caption{End-to-end modular system architecture for AquaTrack}
+\label{fig:aquatrack-architecture}
+\end{figure}

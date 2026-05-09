@@ -1,9 +1,137 @@
-\chapter{}
+\chapter{Project Repository and File Structure}
 
-\section{}
+The AquaTrack repository is organised into five top-level directories separating data, notebooks, trained model artifacts, backend API, and mobile app. This modular structure ensures that the physiological data, machine learning pipelines, and deployment interfaces are managed independently. The repository follows standard software engineering practices to facilitate scalability and cross-modal system maintenance.
 
-% Content removed for now
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+AquaTrack/ 
+| 
+|-- data/ 
+| |-- main_data.csv % Primary biomarker dataset (n=90) 
+| |-- context_data.csv % Contextual sensor dataset (n=290) 
+| 
+|-- notebooks/ 
+| |-- main_pipeline.ipynb % EDA, preprocessing, target eng, 
+| % % feature engineering, ML training 
+| |-- context_pipeline.ipynb % Context sensor EDA, binary 
+| % % classifier training 
+| 
+|-- models/ 
+| |-- artifacts/ 
+| |-- aquatrack_main_classifier.pkl % Trained main pipeline 
+| |-- aquatrack_context_classifier.pkl % Trained context pipeline 
+| |-- aquatrack_training_medians.pkl % Per-feature medians for 
+| % % inference-time imputation 
+| |-- aquatrack_selected_features.pkl % Feature list for input 
+| % % ordering at inference 
+| 
+|-- api/ 
+| |-- main.py % FastAPI backend - 3 endpoints: 
+| % POST /predict 
+| % POST /predict-context 
+| % GET /medians 
+| 
+|-- aquatrack-app/ 
+ |-- app/ 
+ | |-- screens/ % Home, Predict, Results, 
+ | | % History, Insights, Settings 
+ | |-- components/ % Gauge, RiskBadge, TrendChart, 
+ | | % InputCard, ResultCard 
+ | |-- services/ 
+ | | |-- api.js % All Axios API calls in one file 
+ | |-- store/ 
+ | | |-- useHistoryStore.js % AsyncStorage CRUD operations 
+ | |-- constants/ 
+ | |-- colors.js % Design tokens and theme colors 
+ | |-- endpoints.js % Backend URL configuration 
+ |-- app.json % Expo configuration file
+\end{lstlisting}
 
-\section{}
+\chapter{Dataset Description}
 
-% Content removed for now
+\section{D\_main — Primary Biomarker Dataset Features}
+
+\begin{small}
+\begin{longtable}{lll}
+\caption{D\_main dataset along with features.} \label{tab:dmain_features} \\
+\toprule
+\textbf{Feature Name} & \textbf{Unit} & \textbf{Modality Group} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\toprule
+\textbf{Feature Name} & \textbf{Unit} & \textbf{Modality Group} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{{Continued on next page}} \\
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
+\textit{SWEAT MARKERS} & & \\
+sweat chloride & mmol/L & Sweat Biomarker \\
+sweat osmolality & mmol/kg & Sweat Biomarker \\
+\midrule
+\textit{SALIVARY MARKERS} & & \\
+salivary osmolality & mmol/kg & Salivary Biomarker \\
+salivary chloride & mmol/L & Salivary Biomarker \\
+salivary amylase & units/L & Salivary Biomarker \\
+salivary protein conc. & mg/L & Salivary Biomarker \\
+salivary cortisol & ng/mL & Salivary Biomarker \\
+salivary cortisone & ng/mL & Salivary Biomarker \\
+salivary potassium & mmol/L & Salivary Biomarker \\
+\midrule
+\textit{BODY COMPOSITION} & & \\
+total body water (TBW) & L & Body Composition \\
+weight (InBody 720) & kg & Body Composition \\
+weight (Kern scale) & kg & Body Composition \\
+\midrule
+\textit{IMPEDANCE} & & \\
+impedance right arm & Ohm & Segmental Impedance \\
+impedance left arm & Ohm & Segmental Impedance \\
+impedance trunk & Ohm & Segmental Impedance \\
+impedance right leg & Ohm & Segmental Impedance \\
+impedance left leg & Ohm & Segmental Impedance \\
+\midrule
+\textit{SKIN TEMPERATURE} & & \\
+temperature ear & $^\circ$C & Skin Temperature \\
+temperature left hand & $^\circ$C & Skin Temperature \\
+temperature right hand & $^\circ$C & Skin Temperature \\
+temperature left foot & $^\circ$C & Skin Temperature \\
+temperature right foot & $^\circ$C & Skin Temperature \\
+\midrule
+\textit{ACTIVITY AND IDENTIFIERS} & & \\
+running speed & km/h & Activity \\
+running interval & index & Activity \\
+subject id & --- & Identifier \\
+age & years & Identifier \\
+height & cm & Identifier \\
+\end{longtable}
+\end{small}
+
+\section{D\_ctx — Context Sensor Dataset Features}
+
+\begin{table}[htb]
+\small
+\centering
+\caption{D\_ctx dataset along with features.}
+\label{tab:dctx_features}
+\begin{tabular}{lll}
+\toprule
+\textbf{Feature Name} & \textbf{Unit} & \textbf{Feature Type} \\
+\midrule
+Electrical Capacitance & a.u. & Skin Sensor \\
+TEWL & g/m$^2$/h & Skin Sensor \\
+Ambient Humidity & \% & Environmental \\
+Ambient Temperature & $^\circ$C & Environmental \\
+Skin Conductance & $\mu$S & Skin Sensor \\
+Impedance & Ohm & Skin Sensor \\
+Skin Temperature & $^\circ$C & Skin Sensor \\
+Skin Reflectance & a.u. & Skin Sensor \\
+Color Metrics & a.u. & Skin Sensor \\
+Time of Day & index & Temporal \\
+Target & binary & Label \\
+\bottomrule
+\end{tabular}
+\end{table}
