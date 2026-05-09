@@ -48,11 +48,12 @@ AquaTrack/
 
 \chapter{Dataset Description}
 
-\section{D\_main — Primary Biomarker Dataset Features}
+\section{D\_main - Primary Biomarker Dataset Features}
 
-\begin{small}
+\begingroup
+\small
 \begin{longtable}{lll}
-\caption{D\_main dataset along with features.} \label{tab:dmain_features} \\
+\caption{D\_main dataset feature inventory} \label{tab:dmain_features} \\
 \toprule
 \textbf{Feature Name} & \textbf{Unit} & \textbf{Modality Group} \\
 \midrule
@@ -108,19 +109,32 @@ subject id & --- & Identifier \\
 age & years & Identifier \\
 height & cm & Identifier \\
 \end{longtable}
-\end{small}
+\endgroup
 
-\section{D\_ctx — Context Sensor Dataset Features}
+\clearpage
 
-\begin{table}[htb]
+\section{D\_ctx - Context Sensor Dataset Features}
+
+\begingroup
 \small
-\centering
-\caption{D\_ctx dataset along with features.}
-\label{tab:dctx_features}
-\begin{tabular}{lll}
+\begin{longtable}{lll}
+\caption{D\_ctx dataset feature inventory} \label{tab:dctx_features} \\
 \toprule
 \textbf{Feature Name} & \textbf{Unit} & \textbf{Feature Type} \\
 \midrule
+\endfirsthead
+\multicolumn{3}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\toprule
+\textbf{Feature Name} & \textbf{Unit} & \textbf{Feature Type} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{{Continued on next page}} \\
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
 Electrical Capacitance & a.u. & Skin Sensor \\
 TEWL & g/m$^2$/h & Skin Sensor \\
 Ambient Humidity & \% & Environmental \\
@@ -132,6 +146,5 @@ Skin Reflectance & a.u. & Skin Sensor \\
 Color Metrics & a.u. & Skin Sensor \\
 Time of Day & index & Temporal \\
 Target & binary & Label \\
-\bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}
+\endgroup

@@ -111,7 +111,7 @@
 \ifDrf
 % Remove Certificate, Declaration, Acknowledgement and TOC
 \else
-\begin{spacing}{1.5}
+\setstretch{1.5}
 \input{./CoverPages/Certificate}
 
 \newpage
@@ -126,24 +126,17 @@
 \chapter*{Abstract}
 \input{./CoverPages/Abstract}
 
-\end{spacing}
 \newpage
 \pagestyle{fplain}
-\begin{spacing}{1.5}
-	\tableofcontents	
-\end{spacing}
+\tableofcontents	
 \newpage
-\begin{spacing}{1.5}
-	\cleardoublepage
-	\addcontentsline{toc}{chapter}{\listfigurename}
-	\listoffigures	
-\end{spacing}
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures	
 \newpage
-\begin{spacing}{1.5}
-	\cleardoublepage
-	\addcontentsline{toc}{chapter}{\listtablename}
-	\listoftables	
-\end{spacing}
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables	
 
 \printglossary[type=\acronymtype, title= Abbreviations, toctitle=Abbreviations]
 
@@ -152,7 +145,7 @@
 \mainmatter
 \pagestyle{mplain}
 \glsresetall
-\begin{spacing}{1.5}
+\setstretch{1.5}
 %Chapter 1 
 \input{./Chapter1/chapter1-Intro}
 
@@ -183,5 +176,4 @@
 \nocite{*}
 \printbibliography%
 \fi
-\end{spacing}
 \end{document}

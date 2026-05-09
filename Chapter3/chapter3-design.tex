@@ -145,13 +145,9 @@ Skin Stress Score & $TEWL \times T_{skin}$ & Combines barrier loss and skin temp
 
 \section{Model Training, Selection and Evaluation}
 
-The prediction engine evaluates four distinct classifier families: Logistic Regression (LR), Random Forest (RF), RBF-kernel Support Vector Machine (SVM), and Gradient Boosting. Hyperparameter optimization is performed using GridSearchCV over extensive search spaces, including regularization penalties, tree depth, and kernel bandwidth. Model selection is guided by stratified 10-fold cross-validation to ensure that each fold maintains the class distribution of the original dataset. The overall model construction and weighted fusion logic is formalized in Algorithm \ref{alg:fusion-procedure}.
-
-The final fused dehydration score $F$ is computed as a weighted combination of the independent pipeline outputs,showing biomarker-driven versus context-driven evidence:
-\begin{equation}
-\label{eq:fusion-score}
-F = 0.6 \times S_{main} + 0.4 \times S_{ctx}
-\end{equation}
+The prediction engine evaluates four distinct classifier families: Logistic Regression (LR), Random Forest (RF), RBF-kernel Support Vector Machine (SVM), and Gradient Boosting. Hyperparameter optimization is performed using GridSearchCV over extensive search spaces, including regularization penalties, tree depth, and kernel bandwidth. Model selection is guided by stratified 10-fold cross-validation to ensure that each fold maintains the class distribution of the original dataset. The overall model construction and weighted fusion logic is formalized in Algorithm \ref{alg:fusion-procedure}. 
+The comprehensive training configuration and specific hyperparameter search grids used for optimization 
+are detailed in Table \ref{tab:training-config} and Table \ref{tab:hyperparameter-grid}, respectively.
 
 \begin{algorithm}
 \caption{Dual-pipeline model building and weighted fusion procedure}
@@ -169,3 +165,53 @@ F = 0.6 \times S_{main} + 0.4 \times S_{ctx}
 \State Flag conflicts when the categorical prediction and weighted fused score disagree beyond threshold limits.
 \end{algorithmic}
 \end{algorithm}
+
+\clearpage
+
+\begin{table}[ht]
+\small
+\centering
+\caption{Training configuration and design decisions applied in both pipelines.}
+\label{tab:training-config}
+\begin{tabular}{lll}
+\toprule
+\textbf{Component} & \textbf{Decision} & \textbf{Justification} \\
+\midrule
+Train-Test Split & 80/20 stratified & Preserves class balance in both partitions \\
+Cross-Validation & 10-Fold StratifiedKFold & Maximises training data per fold at n=90 \\
+Scoring Metric & Macro F1 & Equal class importance regardless of size \\
+Class Handling & class\_weight=balanced & Prevents majority-class dominance \\
+Scaling & RobustScaler (in Pipeline) & Outlier-resistant, leakage-free \\
+Hyperparameter Search & GridSearchCV & Exhaustive search over defined grids \\
+Model Selection & Best CV Macro F1 on train & Test set never used for selection \\
+Test Evaluation & Once, post-selection only & Prevents selection bias \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\small
+\centering
+\caption{Hyperparameter tuning search grids used in GridSearchCV}
+\label{tab:hyperparameter-grid}
+\begin{tabular}{lll}
+\toprule
+\textbf{Classifier} & \textbf{Parameter} & \textbf{Values Searched} \\
+\midrule
+\multirow{3}{*}{Logistic Regression} & C & 0.01, 0.1, 1, 10 \\
+& solver & lbfgs, saga \\
+& max\_iter & 1000 (fixed) \\
+\midrule
+\multirow{3}{*}{Random Forest} & n\_estimators & 50, 100, 200 \\
+& max\_depth & None, 5, 10 \\
+& min\_samples\_leaf & 1, 2 \\
+\midrule
+\multirow{2}{*}{SVM (RBF)} & C & 0.1, 1, 10 \\
+& gamma & scale, auto \\
+\midrule
+\multirow{3}{*}{Gradient Boosting} & n\_estimators & 50, 100 \\
+& learning\_rate & 0.05, 0.1 \\
+& max\_depth & 3, 5 \\
+\bottomrule
+\end{tabular}
+\end{table}

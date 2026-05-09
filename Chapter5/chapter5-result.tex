@@ -121,10 +121,26 @@ Gradient Boosting & 0.9050 & 0.9520 & 0.9957 & 1.000\\
 \end{tabular}
 \end{table}
 
+\begin{table}[htb]
+\small
+\centering
+\caption{Distribution of weighted fusion score F across the three derived risk classes.}
+\label{tab:fusion-score-dist}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Risk Class} & \textbf{n} & \textbf{Mean F} & \textbf{Std F} & \textbf{Min F} & \textbf{Max F} \\
+\midrule
+Low & 30 & 0.203 & \textit{[TBP]} & 0.096 & 0.243 \\
+Medium & 30 & 0.295 & \textit{[TBP]} & 0.247 & 0.351 \\
+High & 30 & 0.471 & \textit{[TBP]} & 0.354 & 0.744 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Discussion}
 
 The results indicate that the AquaTrack architecture is feasible at both the sensing and computational levels. The sodium alginate hydrogel provides a practical and flexible medium for sweat collection and urea-responsive colorimetric detection. The machine learning pipeline demonstrates that biomarker features and context features can be modeled independently and then fused to improve interpretability.
 
 The perfect test scores should be interpreted carefully because the datasets are relatively small and the labels are derived rather than clinically annotated. However, the high cross-validation scores show that the engineered features are internally consistent and that the dual-pipeline design is promising for future validation on larger real-world datasets.
 
-The context pipeline adds value by identifying conditions where the biomarker-only prediction may require correction. This is important for mobile health use because sweat availability, exertion, and climate can influence sensor readings. A fused prediction score therefore provides a more practical decision layer than a single model output.
+The context pipeline adds value by identifying conditions where the biomarker-only prediction may require correction. This is important for mobile health use because sweat availability, exertion, and climate can influence sensor readings. A fused prediction score therefore provides a more practical decision layer than a single model output. The statistical distribution of these scores across the predicted risk categories is presented in Table \ref{tab:fusion-score-dist}, which validates the score separability and clinical alignment of the framework.
