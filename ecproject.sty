@@ -291,11 +291,11 @@
 
 \ifIDP
   \begin{tikzpicture}[remember picture, overlay]
-    \node[anchor=south east,inner sep=0, fill=white] (image) at ($(current page.south east) + (-0.8in,0.8in)$) {\fbox{\qrcode[hyperlink,height=1.75cm]{\@qrurl}}};
+    \node[anchor=south east,inner sep=0, fill=white] (image) at ($(current page.south east) + (-0.8in,0.8in)$) {\fbox{\includegraphics[height=1.75cm]{Figures/AquaTrack-IDP-6th-SEM}}};
   \end{tikzpicture}
 \else
   \begin{tikzpicture}[remember picture, overlay]
-    \node[anchor=north east,inner sep=0, fill=white] (image) at ($(current page.north east) + (-0.15in,-0.15in)$) {\fbox{\qrcode[hyperlink,height=1.75cm]{\@qrurl}}};
+    \node[anchor=north east,inner sep=0, fill=white] (image) at ($(current page.north east) + (-0.15in,-0.15in)$) {\fbox{\includegraphics[height=1.75cm]{Figures/AquaTrack-IDP-6th-SEM}}};
   \end{tikzpicture}
 \fi
 

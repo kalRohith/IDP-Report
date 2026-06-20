@@ -12,7 +12,7 @@ Sodium alginate hydrogel was prepared by combining 2\% sodium alginate powder wi
 
 The mixture was allowed to cool to room temperature before adding activated urease enzyme. Urease was prepared from urease-active meal by dissolving it in distilled water and collecting the yellow upper layer containing the enzyme. The cooled hydrogel mixture was cast onto clean, dry petri plates with a thickness of approximately 0.5--1 cm.
 
-A 2\% calcium chloride solution was sprayed on the cast hydrogel and allowed to stand until a skin formed. The plates were then flooded with calcium chloride solution so that the hydrogel remained submerged. Calcium ions cross-linked the alginate chains by forming ionic bridges between carboxylate groups, producing the solid hydrogel network. After cross-linking, excess calcium chloride was removed and the hydrogels were washed three times with distilled water. The plates were covered with cling film with small holes and air-dried for 7--10 days until flexible patches were obtained.
+A 2\% calcium chloride solution was sprayed on the cast hydrogel and allowed to stand until a skin formed. The plates were then flooded with calcium chloride solution so that the hydrogel remained submerged. Calcium ions cross-linked the alginate chains by forming ionic bridges between carboxylate groups, producing the solid hydrogel network. After cross-linking, excess calcium chloride was removed and the hydrogels were washed three times with distilled water. The plates were covered with cling film with small holes and air-dried for 7--10 days until flexible patches were obtained. Multiple sodium alginate trials were carried out for optimization by varying material concentrations, drying method, and drying duration. This route produced the most reliable CKD-detecting patches because the calcium-alginate network gave sufficient mechanical strength while retaining urease inside the hydrated matrix.
 
 \begin{figure}[htb]
 \centering
@@ -23,9 +23,32 @@ A 2\% calcium chloride solution was sprayed on the cast hydrogel and allowed to 
 
 \subsection{Polyvinyl Alcohol Hydrogel}
 
-Polyvinyl alcohol (PVA) hydrogels were synthesized using a cryogelation process. A mixture of 10\% PVA, distilled water, and glycerol was heated to approximately 80--90$^\circ$C. Phenol red was added after mixing, and activated urease was added only after cooling to protect enzyme activity. The mixture was poured into petri plates, sealed, and placed in a deep freezer at -20$^\circ$C overnight for the freeze cycle.
+Polyvinyl alcohol (PVA) hydrogels were synthesized using a cryogelation process. A mixture of 10\% PVA, distilled water, and glycerol was heated to approximately 80--90$^\circ$C. Phenol red was added after mixing, and activated urease was added only after cooling to protect enzyme activity. The mixture was poured into petri plates, sealed with parafilm to prevent leakage, and placed in a deep freezer at -20$^\circ$C overnight for the freeze cycle.
 
-The samples were thawed at room temperature the next day. The freeze-thaw process was repeated three times over four days. During freezing, water crystallization pushes PVA chains closer together, promoting hydrogen bonding and crystallite formation. During thawing, the crystallites remain and create pores where water or sweat can enter. In the performed trials, PVA hydrogels did not cross-link successfully enough for use in the final prototype, so sodium alginate was selected.
+The samples were thawed at room temperature the next day. The freeze-thaw process was repeated three times over four days. During freezing, water crystallization pushes PVA chains closer together, promoting hydrogen bonding and crystallite formation. During thawing, the crystallites remain and create pores where water or sweat can enter. In the performed trials, PVA hydrogels did not cross-link successfully enough for use in the final prototype, but the trials helped establish the role of polymer concentration, thermal stability, and crystallite formation in hydrogel strength.
+
+A modified PVA route was then attempted using the same formulation but replacing freeze-thaw cycling with air drying. The cast hydrogels were covered with tissue paper and allowed to dry for approximately one week. This produced a more flexible film than the cryogelation route. Both control PVA films and urease-reinforced PVA films were synthesized and retained for colorimetric testing.
+
+\clearpage
+\begin{figure}[p]
+\centering
+\begin{minipage}{\textwidth}
+\centering
+\includegraphics[height=0.38\textheight,keepaspectratio]{Figures/aquatrack/image6}
+\caption{Failed PVA hydrogel samples after freeze-thaw cycles}
+\label{fig:pva-failed}
+\end{minipage}
+
+\vspace{0.6cm}
+
+\begin{minipage}{\textwidth}
+\centering
+\includegraphics[height=0.38\textheight,keepaspectratio]{Figures/aquatrack/image2}
+\caption{Air-dried PVA hydrogel film}
+\label{fig:pva-air-dried}
+\end{minipage}
+\end{figure}
+\clearpage
 
 \section{Dataset Description}
 
@@ -149,7 +172,7 @@ The prediction engine evaluates four distinct classifier families: Logistic Regr
 The comprehensive training configuration and specific hyperparameter search grids used for optimization 
 are detailed in Table \ref{tab:training-config} and Table \ref{tab:hyperparameter-grid}, respectively.
 
-\begin{algorithm}
+\begin{algorithm}[ht]
 \caption{Dual-pipeline model building and weighted fusion procedure}
 \label{alg:fusion-procedure}
 \begin{algorithmic}[1]
@@ -166,10 +189,12 @@ are detailed in Table \ref{tab:training-config} and Table \ref{tab:hyperparamete
 \end{algorithmic}
 \end{algorithm}
 
-\begin{table}[ht]
+\clearpage
+
+\begin{table}[!p]
 \small
 \centering
-\caption{Training configuration and design decisions applied in both pipelines.}
+\caption{Training configuration and design decisions across classifiers}
 \label{tab:training-config}
 \begin{tabular}{lll}
 \toprule
@@ -187,10 +212,12 @@ Test Evaluation & Once, post-selection only & Prevents selection bias \\
 \end{tabular}
 \end{table}
 
-\begin{table}[ht]
+\vspace{0.8cm}
+
+\begin{table}[!p]
 \small
 \centering
-\caption{Hyperparameter tuning search grids used in GridSearchCV}
+\caption{Hyperparameter tuning search grids used across GridSearchCV}
 \label{tab:hyperparameter-grid}
 \begin{tabular}{lll}
 \toprule

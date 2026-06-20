@@ -6,7 +6,9 @@ The results of AquaTrack are evaluated through two lenses: the physical performa
 
 The best-performing patch was produced using 2\% sodium alginate hydrogel, 5 drops of phenol red, 2 ml of urease, and 2\% calcium chloride for cross-linking. This formulation produced a flexible patch with good elastic strength and a high swelling response. The patch also detected elevated urea concentration by converting urea into ammonia, shifting the local pH, and causing a visible color change through phenol red.
 
-PVA hydrogel trials were not successful because the hydrogel did not cross-link adequately despite multiple freeze-thaw cycles. Possible reasons include insufficient PVA concentration, temperature variation during freezing and thawing, and weak crystallite formation. Since sodium alginate produced more reliable patches, it was selected for the final prototype. The resulting PVA samples remained semi-liquid and lacked the structural integrity required for a wearable application. Furthermore, the enzymatic activity of urease may have been compromised during the repeated temperature fluctuations, leading to inconsistent colorimetric responses. Consequently, the sodium alginate route was prioritized for its superior cross-linking efficiency and chemical stability.
+PVA hydrogel trials using freeze-thaw cycles were not successful because the hydrogel did not cross-link adequately despite repeated cycling. Possible reasons include insufficient PVA concentration, temperature variation during freezing and thawing, and weak crystallite formation. The resulting samples remained semi-liquid and lacked the structural integrity required for a wearable application. Furthermore, the enzymatic activity of urease may have been compromised during repeated temperature fluctuations, leading to inconsistent colorimetric responses.
+
+The modified air-dried PVA route performed better. The films were flexible and showed a visible gradient color response when exposed to urea concentrations from 0--100 mM. Therefore, the final prototype work retained sodium alginate patches for the main sweat-patch formulation while also using air-dried PVA films for comparative colorimetric testing.
 
 \begin{figure}[htb]
 \centering
@@ -58,6 +60,32 @@ The hydrogel therefore absorbed water and increased by approximately 122\%. This
 \caption{Wet weight measurement of the sweat patch}
 \label{fig:wet-weight}
 \end{minipage}
+\end{figure}
+
+\clearpage
+
+\section{Colorimetric Assay}
+
+The synthesized sodium alginate and PVA hydrogels were tested for urease activity using pH-dependent colorimetric response. Artificial sweat with elevated urea concentration was prepared to mimic the sweat chemistry expected in severe CKD conditions. Normal sweat is mildly acidic, typically around pH 4.0--6.8. When urea-rich sweat enters the hydrogel, immobilized urease hydrolyzes urea into ammonia. Ammonia increases local alkalinity, causing phenol red to shift toward a bright pink color. The intensity of the pink response indicates the strength of the urea exposure.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=0.42\textheight,keepaspectratio]{Figures/aquatrack/image11}
+\caption{Color change of sodium alginate hydrogel after exposure to urea}
+\label{fig:alginate-urea-color}
+\end{figure}
+
+\clearpage
+
+\section{Time-Series Color Change Analysis}
+
+For image-based response analysis, air-dried PVA patches were exposed to a standard urea concentration gradient from 0 to 100 mM. The sequence was captured at one-minute intervals to observe the gradual shift toward pink intensity, which indicates urease activity and increasing alkalinity due to ammonia formation.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=0.65\textheight,keepaspectratio]{Figures/aquatrack/image16}
+\caption{Representative time-series color change of PVA hydrogel}
+\label{fig:pva-urea-gradient}
 \end{figure}
 
 \clearpage
@@ -126,7 +154,7 @@ Gradient Boosting & 0.9050 & 0.9520 & 0.9957 & 1.000\\
 \centering
 \caption{Distribution of weighted fusion score across derived risk classes.}
 \label{tab:fusion-score-dist}
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccc}
 \toprule
 \textbf{Risk Class} & \textbf{n} & \textbf{Mean F} & \textbf{Min F} & \textbf{Max F} \\
 \midrule
